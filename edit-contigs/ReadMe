@@ -1,0 +1,3 @@
+filter-and-annotate.sh : Drops contigs <20000 in fasta file and formats custom headers to make them compatible to run prokka
+Needs: Prokka, awk and BBMap
+
