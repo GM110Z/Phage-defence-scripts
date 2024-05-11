@@ -1,0 +1,15 @@
+import pandas as pd
+from Bio import SeqIO, SeqFeature
+import glob
+import os
+import pandas as pd
+import numpy as np
+
+for f in glob.glob("*.csv"):
+         os.system("cat "+f+" >> padloc-big.csv")
+
+deff=pd.read_csv( 'padloc-big.csv', sep=",", low_memory=False)
+new_dataframe1 = deff[['seqid','start','end', 'target.name','system','strand']]
+new_dataframe1.to_csv("padloc-gggenes.txt", "\t", index=False, header=True)
+os.system("rm padloc-big.csv") 
+print('Done!')
