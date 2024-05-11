@@ -1,0 +1,86 @@
+library("ggplot2")
+library("ggtree")
+library('tidyverse')
+library("RColorBrewer")
+
+#load up the tree
+nwk <- ("set.bionj.newick")
+tree <- read.tree(nwk)
+
+options(ignore.negative.edge=TRUE)
+
+#add prophages type classification to two vectors
+##holin
+holins = read.csv("holin.txt", 
+                         sep = "\t",
+                         col.names = c("ID", "ProphageType"), 
+                         header = FALSE, 
+                         stringsAsFactors = FALSE)
+##p2
+p2 = read.csv("p2.txt", 
+               sep = "\t",
+               col.names = c("ID", "ProphageType"), 
+               header = FALSE, 
+               stringsAsFactors = FALSE)
+##rest
+rest = read.csv("rest.txt", 
+              sep = "\t",
+              col.names = c("ID"), 
+              header = FALSE, 
+              stringsAsFactors = FALSE)
+#make vectors
+vec1 <- holins$ID # this contains holin prophages
+vec2<- p2$ID # this contains p2 prophages
+vec3<- rest$ID
+# make it group 
+grp <- list(Holin_hotspot = vec1,
+            P2_like = vec2,
+            None=vec3)
+tree <- groupOTU(tree,grp)
+#rectangular tree
+t <-ggtree(tree, aes(color=group),layout="rectangular",ladderize = T, right = T,size=0.1) +
+  scale_color_manual(labels=c('Holin_hotspot','None','P2_like'), values=c( "#FF7F00","black", "cyan"))+ theme(legend.position="right")+
+  geom_treescale(x=0, y=0, offset = 10, width = 0.1, linesize = 0.5)
+#circular tree
+t2 <- ggtree(tree, aes(color=group),layout='circular',size=0.1)+scale_color_manual(labels=c('Holin_hotspot','None','P2_like'), values=c( "#FF7F00","black", "cyan"))
+t2
+
+
+
+#add the viral family outside
+## first make a colour palette
+n <- 45
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+
+
+##now group viruses by known family
+heatmapdata = read.csv("virusfamil.txt", 
+                sep = "\t",
+                col.names = c("ID","ViralFam"), 
+                header = FALSE, 
+                stringsAsFactors = FALSE)
+##rest
+viralfami = read.csv("virusfam.txt", 
+                sep = "\t",
+                col.names = c("ID"), 
+                header = FALSE, 
+                stringsAsFactors = FALSE)
+vec4<- viralfami$ID
+
+viralfam <- data.frame("gender" = heatmapdata[,c("ViralFam")])
+rownames(viralfam) <- heatmapdata$ID
+
+
+h1 <-  gheatmap(t2, viralfam,                                 # we add a heatmap layer of the gender dataframe to our tree plot
+                width = 0.10,                              # width defines the width of the heatmap column,
+                color = NULL,                              # color defines the boarder of the heatmap columns
+                colnames = FALSE,) +                               # hides column names for the heatmap
+  scale_fill_manual(name = "ViralFam",                       # define the coloring scheme and legend for gender
+                    values = col_vector[0:40]) +
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        legend.box = "vertical", plot.margin = unit(c(1,2,1,2),"mm"), legend.key.size = unit(2,"mm"))
+h1
+ggsave("Viral-tree.pdf", width = 40, height = 40, units = "cm")
