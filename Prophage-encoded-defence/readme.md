@@ -5,3 +5,6 @@
 **PARSEC**:Finds prophages in genomes, groups them with fastANI It needs PhySpy, and faidx, fastANI and ANIClustermap(https://github.com/moshi4/ANIclustermap/tree/main)
 
 **fastani-to-clusters.py**: runs as fastani-to-clusters.oy <threshold for clustering (float)> Script from https://github.com/moshi4/ANIclustermap/tree/main), needs pandas
+
+
+**ViralTreeAnno** : R code that uses ggtree to annotate a VIPTree or any tree with user input data in table format
