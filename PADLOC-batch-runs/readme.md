@@ -10,4 +10,3 @@
 
 **padloc-parallel-run.sh**: Does what it says
 
-**STHENOS**: A: Starting from genomic coordinates of defence system uses bedtools-pyfaidx-eutils to find and extract flanking regions. Uses helper python script gbktofaa.py to convert genbank files to protein fasta, then uses mmseqs2 to cluster proteins.
