@@ -8,3 +8,5 @@
 
 
 **ViralTreeAnno** : R code that uses ggtree to annotate a VIPTree or any tree with user input data in table format
+
+**find-defence-prophages.py** compares output of fastANI-clusters from all prophages vs prophages that had defences, to select clusters from the table of All prophages that have members with a defence system
