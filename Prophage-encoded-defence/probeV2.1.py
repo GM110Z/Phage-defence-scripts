@@ -1,4 +1,3 @@
-
 import os
 import sys
 import glob
@@ -85,13 +84,16 @@ def process_files(model1, model2, protein_directory, genbank_directory):
                 start1, end1, chrom_id1 = get_protein_location(genbank_file, protein_id1)
                 start2, end2, chrom_id2 = get_protein_location(genbank_file, protein_id2)
 
-                # Combine coordinates if proteins are on the same chromosome
+                # Combine coordinates if proteins are on the same chromosome and within 10,000 base pairs
                 if all([start1, end1, chrom_id1, start2, end2, chrom_id2]) and chrom_id1 == chrom_id2:
-                    combined_start = min(start1, start2)
-                    combined_end = max(end1, end2)
-                    with open("Brex-coordinates.txt", "a") as f:
-                        f.write(f"{chrom_id1}\t{combined_start}\t{combined_end}\n")
-                    print(f"Written coordinates: {chrom_id1}, {combined_start}-{combined_end}")
+                    if abs(start1 - end2) <= 10000 or abs(start2 - end1) <= 10000:
+                        combined_start = min(start1, start2)
+                        combined_end = max(end1, end2)
+                        with open("Brex-coordinates.txt", "a") as f:
+                            f.write(f"{chrom_id1}\t{combined_start}\t{combined_end}\n")
+                        print(f"Written coordinates: {chrom_id1}, {combined_start}-{combined_end}")
+                    else:
+                        print(f"Proteins are on the same chromosome but too far apart: {protein_id1}, {protein_id2}")
                 else:
                     print(f"Proteins are on different chromosomes or not found: {protein_id1}, {protein_id2}")
             else:
@@ -113,7 +115,7 @@ def process_files(model1, model2, protein_directory, genbank_directory):
 # Example call to process the files
 if __name__ == "__main__":
     model1 = "antiterQ.hmm"
-    model2 = "holin.hmm"
+    model2 = "holin2.hmm"
     protein_directory = sys.argv[1]
     genbank_directory = sys.argv[2]
     process_files(model1, model2, protein_directory, genbank_directory)
