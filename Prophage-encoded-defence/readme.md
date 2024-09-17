@@ -12,3 +12,10 @@
 **find-defence-prophages.py** compares output of fastANI-clusters from all prophages vs prophages that had defences, to select clusters from the table of All prophages that have members with a defence system
 
 **probeV2.1.py**: PRotein cOlocalisation By hmmEr: Uses HMM models of an upstream and downstream protein to extract genomic regions. 1st arg: directory with .faa files 2nd arg : directory to genbank files. Runs without wrapper. 
+
+**pecan.py**"ProtEin Colocalization by ANnotations: Uses the annotations in genbank 'product' to find desired proteins. It finds only those that colocalise <10000kb distance:
+sys.argv[1]:Annotation search term1
+sys.argv[2]:Annotation search term2
+sys.argv[3]:Allowed intergenic distance between search terms
+sys.argv[4]:path/to/genbank/files
+sys.argv[5]:Name of outputfile
