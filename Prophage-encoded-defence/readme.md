@@ -22,5 +22,5 @@ sys.argv[3]:Allowed intergenic distance between search terms
 sys.argv[4]:path/to/genbank/files
 sys.argv[5]:Name of outputfile
 
--**PHORIFIC.py** It needs local genbank files (*.gb) to build a table of coordinates for each proteins. Then based on nuccore ID and coordinates, predicts which proteins are in operons. COmbines these data with MMSeqs clustering (run separately). This allows to find operons that occurr more than once and pick one representative each for further analysis 
-NOTE:FOR NOW EDITING OF INPUT FILES  NAMES AND PATH AND OPERON DISTANCE NEEDS TO BE MANUALLY CHANGED --FIX WILL FOLLOW SOON WHEN I HAVE DECIDED IF THE SCRIPT IS COMPLETE AND GOOD LIKE THIS-
+- **PHORIFIC.py** It needs local genbank files (*.gb) to build a table of coordinates for each proteins. Then based on nuccore ID and coordinates, predicts which proteins are in operons. COmbines these data with MMSeqs clustering (run separately). This allows to find operons that occurr more than once and pick one representative each for further analysis 
+NOTE:FOR NOW EDITING OF INPUT FILES  NAMES AND PATH AND OPERON DISTANCE NEEDS TO BE MANUALLY CHANGED --FIX WILL FOLLOW SOON WHEN I HAVE DECIDED IF THE SCRIPT IS COMPLETE AND GOOD LIKE THIS
