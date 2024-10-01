@@ -14,11 +14,11 @@ for file in ${VAR}
         done
 #create fasta database
 cwd=$(pwd)
-find . -name '*.gbff_phage.fasta' -exec cp {} ${cwd}/ \
+find . -name '*.gb_phage.fasta' -exec cp {} ${cwd}/ \
 
 #Split multifasta of multiple prophages
 
-VAR2=$(ls *.gbff_phage.fasta)
+VAR2=$(ls *.gb_phage.fasta)
 
 for i in ${VAR2}
    do
