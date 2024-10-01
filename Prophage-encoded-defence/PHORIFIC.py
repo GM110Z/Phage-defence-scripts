@@ -63,26 +63,28 @@ df5.to_csv("TableOfFeatures.txt", "\t", index=False, header=True)
 ##Part 3: eliminate the hotspot boundaries 
 df = pd.read_csv('TableOfFeatures.txt', sep="\t")
 
-#Function to filter based on extremities and product name
-def eliminate_at_extremities(df):
-    def is_at_extremity(row):
-        # Check if the product is 'phage late control D family protein' or contains 'helix-turn-helix'
-        if 'phage late control D family protein' in row['product'] or 'helix-turn-helix' in row['product']:
-            # Check if the start or end positions match the extremities of the given molecule ID
-            molecule_rows = df[df['molecule'] == row['molecule']]
-            molecule_start = molecule_rows['start'].min()
-            molecule_end = molecule_rows['end'].max()
-            return row['start'] == molecule_start or row['end'] == molecule_end
-        return False
-    
+# Function to filter based on protein ID boundaries
+def eliminate_boundaries_by_protein_id(df):
+    def is_boundary(row):
+        # Check if the current row is the start or end position for the same protein ID within the same molecule
+        protein_rows = df[df['Protein_ID'] == row['Protein_ID']]
+
+        # Get the start and end positions for this protein ID
+        protein_start = protein_rows['start'].min()
+        protein_end = protein_rows['end'].max()
+
+        # Check if the current row is at the boundary
+        return row['start'] == protein_start or row['end'] == protein_end
+
     # Apply the check and filter out the rows that match
-    return df[~df.apply(is_at_extremity, axis=1)]
+    return df[~df.apply(is_boundary, axis=1)]
 
 # Apply the function to eliminate the desired rows
-filtered_df = eliminate_at_extremities(df)
+filtered_df = eliminate_boundaries_by_protein_id(df)
 
 # Save the filtered DataFrame to a new CSV file
 filtered_df.to_csv('filtered_file_no_boundaries.csv', index=False)
+ 
 #removing combined file                
 os.system("rm OutFile.gb") 
 os.system("rm prefiltered.txt") 
