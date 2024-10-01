@@ -260,8 +260,6 @@ def write_combined_results(output_file, operon_assignments):
         writer.writeheader()
         writer.writerows(valid_assignments)
 
-    print(f"Removed {len(operon_assignments) - len(valid_assignments)} rows with 'Not Found' Cluster_ID.")
-
 # Write representative operons to a separate file
 def write_representative_operons(valid_assignments, output_file):
     representative_operons = []
@@ -273,6 +271,26 @@ def write_representative_operons(valid_assignments, output_file):
             representative_operons.append(operon)
             seen_keys.add(key)
 
+    with open(output_file, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=['Protein_ID', 'nuccore_id', 'start', 'stop', 'strand', 'operon_number', 'Cluster_ID'])
+        writer.writeheader()
+        writer.writerows(representative_operons)
+# Write representative operons to a separate file
+def write_representative_operons(valid_assignments, output_file):
+    representative_operons = []
+    seen_keys = set()
+
+    for operon in valid_assignments:
+        # Skip operons with "not found" in Cluster_ID
+        if operon['Cluster_ID'].lower() == 'not found':  # Check for "not found"
+            continue
+        
+        key = (operon['operon_number'], operon['Cluster_ID'])
+        if key not in seen_keys:
+            representative_operons.append(operon)
+            seen_keys.add(key)
+
+    # Write to output file
     with open(output_file, 'w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=['Protein_ID', 'nuccore_id', 'start', 'stop', 'strand', 'operon_number', 'Cluster_ID'])
         writer.writeheader()
@@ -300,5 +318,7 @@ if __name__ == "__main__":
     # Write combined results to output file
     write_combined_results(combined_output_file, combined_results)
 
-    # Write representative operons to a separate file
-    write_representative_operons(combined_results, representative_output_file)
+    # Write representative operons to a separate file, excluding 'not found' Cluster_ID
+    write_representative_operons(combined_results, representative_output_file)    
+
+
