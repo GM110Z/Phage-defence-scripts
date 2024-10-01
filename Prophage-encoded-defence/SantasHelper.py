@@ -7,7 +7,7 @@ df2 = pd.read_csv('representative_operons.csv', sep=",")  # The second table wit
 df_new = pd.read_csv('padloc-short.txt', sep="\t")  # New table with 'system' and 'target.name'
 
 # Perform the merge based on 'Protein_ID' from df2 and 'Domain_ID' from df1
-merged_df = pd.merge(df2, df1, left_on='Protein_ID', right_on='Domain_ID', how='inner')
+merged_df = pd.merge(df2, df1,  left_on='Protein_ID', right_on='Domain_ID', how='left')
 
 # Now select only the columns from df2 and specific columns from df1 that you want
 final_df = merged_df[['Protein_ID', 'nuccore_id', 'start', 'stop', 'strand', 'operon_number', 'Cluster_ID', 'Description_of_Target', 'E_Value']]
