@@ -1,5 +1,3 @@
-#this is edison.py for running pfam
-
 #run PFAM
 import os
 from Bio import SeqIO
@@ -35,7 +33,7 @@ annotations = parse_pfam_output(pfam_output_file)
 
 ##process the output file
 def parse_hmmer_output(output_file):
-    """Parse HMMER domain table output to extract Pfam domains and sequence descriptions."""
+    """Parse HMMER domain table output to extract Pfam domains and sequence descriptions, keeping only the best E-value per sequence."""
     pfam_domains = {}
     sequence_descriptions = {}
     with open(output_file, 'r') as f:
@@ -50,21 +48,21 @@ def parse_hmmer_output(output_file):
             domain_name = fields[4]
             e_value = float(fields[12])
             description = ' '.join(fields[22:]) if len(fields) > 22 else 'Unknown'
+            
             if e_value <= 0.01:  # Exclude domains with E-value > 0.01
-                if sequence_id not in pfam_domains:
-                    pfam_domains[sequence_id] = []
+                # If this sequence_id is new, or this e_value is better than the existing one, keep it
+                if (sequence_id not in pfam_domains) or (e_value < pfam_domains[sequence_id][2]):
+                    pfam_domains[sequence_id] = (domain_id, domain_name, e_value)
                     sequence_descriptions[sequence_id] = description
-                pfam_domains[sequence_id].append((domain_id, domain_name, e_value))
     return pfam_domains, sequence_descriptions
 
 def save_to_tsv(pfam_domains, sequence_descriptions, output_file):
     """Save parsed Pfam domains and sequence descriptions to a TSV file."""
     with open(output_file, 'w') as f:
         f.write("Sequence_ID\tDescription_of_Target\tDomain_ID\tDomain_Name\tE_Value\n")
-        for seq_id, domains in pfam_domains.items():
+        for seq_id, domain in pfam_domains.items():
             description = sequence_descriptions.get(seq_id, 'Unknown')
-            for domain in domains:
-                f.write(f"{seq_id}\t{description}\t{domain[0]}\t{domain[1]}\t{domain[2]}\n")
+            f.write(f"{seq_id}\t{description}\t{domain[0]}\t{domain[1]}\t{domain[2]}\n")
 
 # Example usage:
 output_file = 'filtered_pfam_domains_with_desc.tsv'
