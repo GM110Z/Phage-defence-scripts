@@ -26,7 +26,7 @@ for i in ${VAR2}
    done
 
 rm *.fai
-rm *.gbff_phage.fasta
+rm *.gb_phage.fasta
 
 
 #cluster prophages by similarity with fastANI and ANIClustermap
