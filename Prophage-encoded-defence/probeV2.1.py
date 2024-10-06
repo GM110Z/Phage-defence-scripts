@@ -32,11 +32,13 @@ def parse_hmmer_output(hmm_output_file, csv_output_file):
 
 # Function to get protein location from GenBank
 def get_protein_location(genbank_file, protein_id):
-    genbank_record = SeqIO.read(genbank_file, "genbank")
-    for feature in genbank_record.features:
-        if feature.type == "CDS" and protein_id in feature.qualifiers.get("protein_id", []):
-            location = feature.location
-            return location.start, location.end, genbank_record.id
+    protein_location = None
+    # Parse the GenBank file to find the record
+    for genbank_record in SeqIO.parse(genbank_file, "genbank"):
+        for feature in genbank_record.features:
+            if feature.type == "CDS" and protein_id in feature.qualifiers.get("protein_id", []):
+                protein_location = (feature.location.start, feature.location.end, genbank_record.id)
+                return protein_location  # Return as soon as we find a match
     return None, None, None
 
 # Function to extract protein IDs from CSV files
@@ -51,8 +53,8 @@ def extract_protein_id(csv_file):
 
 # Main processing function
 def process_files(model1, model2, protein_directory, genbank_directory):
-    fasta_files = glob.glob(f"{protein_directory}/*.fasta")
-    genbank_files = glob.glob(f"{genbank_directory}/*.gb")
+    fasta_files = glob.glob(f"{protein_directory}/*.faa")
+    genbank_files = glob.glob(f"{genbank_directory}/*.gbff")
 
     # Dictionary for GenBank file lookup
     genbank_dict = {os.path.splitext(os.path.basename(f))[0]: f for f in genbank_files}
@@ -112,10 +114,11 @@ def process_files(model1, model2, protein_directory, genbank_directory):
         else:
             print(f"No matching GenBank file found for {fasta_file}.")
 
+
 # Example call to process the files
 if __name__ == "__main__":
-    model1 = "antiterQ.hmm"
-    model2 = "holin2.hmm"
-    protein_directory = sys.argv[1]
-    genbank_directory = sys.argv[2]
+    model1 = sys.argv[1]
+    model2 = sys.argv[2]
+    protein_directory = sys.argv[3]
+    genbank_directory = sys.argv[3]
     process_files(model1, model2, protein_directory, genbank_directory)
