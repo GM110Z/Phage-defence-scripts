@@ -91,7 +91,7 @@ def process_files(model1, model2, protein_directory, genbank_directory):
                     if abs(start1 - end2) <= 10000 or abs(start2 - end1) <= 10000:
                         combined_start = min(start1, start2)
                         combined_end = max(end1, end2)
-                        with open("Brex-coordinates.txt", "a") as f:
+                        with open("Locus-coordinates.txt", "a") as f:
                             f.write(f"{chrom_id1}\t{combined_start}\t{combined_end}\n")
                         print(f"Written coordinates: {chrom_id1}, {combined_start}-{combined_end}")
                     else:
