@@ -1,14 +1,23 @@
-#run PFAM
 import os
 from Bio import SeqIO
 import subprocess
 
+# Run PFAM annotation using HMMER
 def annotate_with_pfam(fasta_file, pfam_db, output_file):
     """Annotate protein sequences with PFAM domains using HMMER."""
+    if not os.path.exists(fasta_file):
+        raise FileNotFoundError(f"FASTA file '{fasta_file}' not found.")
+    if not os.path.exists(pfam_db):
+        raise FileNotFoundError(f"PFAM database file '{pfam_db}' not found.")
+    
     command = f"hmmscan --domtblout {output_file} {pfam_db} {fasta_file}"
-    subprocess.run(command, shell=True, check=True)
+    try:
+        subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running hmmscan: {e.stderr}")
+        raise
 
-# Process the output file
+# Parse the HMMER output file
 def parse_hmmer_output(output_file):
     """Parse HMMER domain table output to extract Pfam domains, keeping only the best E-value per target name."""
     pfam_domains = {}
@@ -17,7 +26,8 @@ def parse_hmmer_output(output_file):
             if line.startswith('#'):
                 continue
             fields = line.strip().split()
-            if len(fields) < 23 or fields[0].startswith('#'):
+            if len(fields) < 23:
+                print(f"Skipping malformed line: {line}")
                 continue
             
             query_name = fields[0]  # Protein ID (query name)
@@ -34,6 +44,7 @@ def parse_hmmer_output(output_file):
 
     return pfam_domains
 
+# Save the parsed Pfam domains to a TSV file
 def save_to_tsv(pfam_domains, output_file):
     """Save the parsed Pfam domains and descriptions to a TSV file, ensuring no duplicates for the target name."""
     with open(output_file, 'w') as f:
@@ -42,8 +53,17 @@ def save_to_tsv(pfam_domains, output_file):
             query_name, accession, e_value, description = values
             f.write(f"{target}\t{accession}\t{query_name}\t{e_value:.2E}\t{description}\n")
 
-# Example usage:
-output_file = 'filtered_pfam_domains_with_desc.tsv'
-parsed_domains = parse_hmmer_output('pfam_annotations.txt')
-save_to_tsv(parsed_domains, output_file)
-print(f"Filtered Pfam domains with descriptions saved to {output_file}")
+# Example usage
+fasta_file = "database.fa"
+pfam_db = "Pfam-A.hmm"
+output_file = 'pfam_annotations.txt'
+
+# Step 1: Run hmmscan to create the output file
+annotate_with_pfam(fasta_file, pfam_db, output_file)
+
+# Step 2: Parse the HMMER output file (only if the previous step succeeds)
+parsed_domains = parse_hmmer_output(output_file)
+
+# Step 3: Save the parsed domains to a new TSV file
+save_to_tsv(parsed_domains, 'filtered_pfam_domains_with_desc.tsv')
+
