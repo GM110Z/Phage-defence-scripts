@@ -12,9 +12,11 @@ Run it like: python fastani-to-clusters.py <anicluster-matrix> 95 (threshold for
 
 **find-defence-prophages.py** compares output of fastANI-clusters from all prophages vs prophages that had defences, to select clusters from the table of All prophages that have members with a defence system
 
-**probeV2.1.py**: PRotein cOlocalisation By hmmEr: Uses HMM models of an upstream and downstream protein to extract genomic regions. 1st arg: directory with .faa files 2nd arg : directory to genbank files. It allows an intergenic distance of 10kb
-sys.argv[1]:path/to/fasta/files
-sys.argv[2]:path/to/gb/files
+**probeV2.1.py**: PRotein cOlocalisation By hmmEr: Uses HMM models of an upstream and downstream protein to extract genomic regions. It allows an intergenic distance of 10kb.
+sys.argv[1]hmm model of boundary 1
+sys.argv[2]:hmm model of boundary 2
+sys.argv[3]:directory with faa and gb files 
+
 
 **PECAN.py**: ProtEin Colocalization by ANnotations: Uses the annotations in genbank 'product' to find desired proteins. It finds only those that colocalise <10000kb distance:
 sys.argv[1]:Annotation search term1
