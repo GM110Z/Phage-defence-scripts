@@ -54,9 +54,9 @@ def save_to_tsv(pfam_domains, output_file):
             f.write(f"{target}\t{accession}\t{query_name}\t{e_value:.2E}\t{description}\n")
 
 # Example usage
-fasta_file = "database.fa"
-pfam_db = "Pfam-A.hmm"
-output_file = 'pfam_annotations.txt'
+fasta_file = "database.fa"  # needds to be in your workdir. A file with all protein of all genomes you want to analyse
+pfam_db = "Pfam-A.hmm" # Pfam HMM models. Can Download from Uniprot
+output_file = 'pfam_annotations.txt' # Name of intermediate Pfam file
 
 # Step 1: Run hmmscan to create the output file
 annotate_with_pfam(fasta_file, pfam_db, output_file)
@@ -65,5 +65,5 @@ annotate_with_pfam(fasta_file, pfam_db, output_file)
 parsed_domains = parse_hmmer_output(output_file)
 
 # Step 3: Save the parsed domains to a new TSV file
-save_to_tsv(parsed_domains, 'filtered_pfam_domains_with_desc.tsv')
+save_to_tsv(parsed_domains, 'filtered_pfam_domains_with_desc.tsv') # Name of final file that has been filtered
 
