@@ -2,9 +2,9 @@
 import pandas as pd
 
 # Assuming the files are tab-separated for both tables
-df1 = pd.read_csv('filtered_pfam_domains_with_desc.tsv', sep="\t")  # The first table with Domain information
+df1 = pd.read_csv('filtered_pfam_domains_with_desc.tsv', sep="\t")  # The PFAM table with Domain information
 df2 = pd.read_csv('representative_operons.csv', sep=",")  # The second table with Protein and operon information
-df_new = pd.read_csv('padloc-short.txt', sep="\t")  # New table with 'system' and 'target.name'
+df_new = pd.read_csv('padloc-short.txt', sep="\t")  # Combine PADLOC output of all files and reduce columns to just 'system' and 'target.name'
 
 # Perform the merge based on 'Protein_ID' from df2 and 'Domain_ID' from df1
 merged_df = pd.merge(df2, df1,  left_on='Protein_ID', right_on='Domain_ID', how='left')
