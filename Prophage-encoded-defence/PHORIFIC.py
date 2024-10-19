@@ -22,8 +22,8 @@ def save_updated_table(df, file_path):
 # Main workflow
 if __name__ == "__main__":
 # Paths to files
-    original_file_path = '/Users/giusym/Desktop/Pseudomonas-projects/Prophages/workdir/clusterRes_cluster.tsv' #edit to your path
-    updated_file_path = '/Users/giusym/Desktop/Pseudomonas-projects/Prophages/workdir/MMseqs-clusternumb.tsv' #edit to your path
+    original_file_path = '/Users/giusym/Desktop/Pseudomonas-projects/Prophages/workdir/clusterRes_cluster.tsv' #edit to your path to input Mmseqs2 table
+    updated_file_path = '/Users/giusym/Desktop/Pseudomonas-projects/Prophages/workdir/MMseqs-clusternumb.tsv' #edit to your path for the file you want to create
 # Step 1: Edit MMseqs clustering table
 clustering_df = load_clustering_table(original_file_path)
 updated_df, _ = assign_numerical_ids(clustering_df)
