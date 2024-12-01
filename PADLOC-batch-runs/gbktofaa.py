@@ -13,7 +13,7 @@ with open(file_name, 'r') as GBFile:
 
     for cds in GBcds:
         if cds.seq is not None:
-            cds.id = cds.id+"|"+ cds.name+"|"+cds.description       #can also just use cds.id
+            cds.id = cds.id     #can also just use cds.id
             cds.description = ''
             all_entries.append(cds)
 
