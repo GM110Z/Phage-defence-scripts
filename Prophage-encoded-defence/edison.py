@@ -1,6 +1,8 @@
+#run PFAM
 import os
 from Bio import SeqIO
 import subprocess
+import sys 
 
 # Run PFAM annotation using HMMER
 def annotate_with_pfam(fasta_file, pfam_db, output_file):
@@ -54,9 +56,9 @@ def save_to_tsv(pfam_domains, output_file):
             f.write(f"{target}\t{accession}\t{query_name}\t{e_value:.2E}\t{description}\n")
 
 # Example usage
-fasta_file = "database.fa"  # needds to be in your workdir. A file with all protein of all genomes you want to analyse
+fasta_file = sys.argv[1]  # needds to be in your workdir. A file with all protein of all genomes you want to analyse
 pfam_db = "Pfam-A.hmm" # Pfam HMM models. Can Download from Uniprot
-output_file = 'pfam_annotations.txt' # Name of intermediate Pfam file
+output_file = 'pfam_annotations-small.txt' # Name of intermediate Pfam file
 
 # Step 1: Run hmmscan to create the output file
 annotate_with_pfam(fasta_file, pfam_db, output_file)
