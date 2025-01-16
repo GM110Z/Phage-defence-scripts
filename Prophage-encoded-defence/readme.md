@@ -31,3 +31,8 @@ NOTE:FOR NOW EDITING OF INPUT FILES  NAMES AND PATH AND OPERON DISTANCE NEEDS TO
 **edison.py**: Edison (hiddEn moDel proteIn familieS identificatiON)Runs hmmscan vs a PFAM database and processes data to only report hits with e-value <0.01 
 
 **SantasHelper** Uses pandas to combine outputs of PHORIFIC, PADLOC and EDISON. Remember to run padloc separately.
+
+
+**ICARUS.py** Uses python to download representative sequences for each predicted operons efetch and then runs cblaster to determine if this is effectively an operon (occurs in multiple genomes). Cblaster run is times so it does not overwhelm blast. Originally written for the project https://github.com/GM110Z/Shield-subtypes, this version of ICARUS leaves out the DUF2130 requirement by commenting it out. 
+
+**get_binary_files.sh** extracts only the binary files produced by cblaster if they have 100 or more lines (thus 100 or more operons) and moves them in a different folder
